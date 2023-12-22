@@ -85,6 +85,6 @@ public class Source {
     }
 
     private Application generateApplication(String content) {
-        return new Application(this.id_source, this.count_application.get(), content);
+        return new Application(this.id_source, this.count_application.get(), content, System.currentTimeMillis());
     }
 }

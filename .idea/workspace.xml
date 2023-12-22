@@ -5,24 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b82287-3d82-407c-8375-764702ce5b40" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Buffer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Device.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Generator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/ProductionManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Report.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/SelectionManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Source.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Settings.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Buffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Buffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Device.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Device.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Generator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/ProductionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/ProductionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/SelectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/SelectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Source.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Source.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Settings.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Settings.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,5 +69,10 @@
       <updated>1702940173828</updated>
     </task>
     <servers />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/APS_2$Server.ic" NAME="Server Coverage Results" MODIFIED="1703205930305" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.example.*</FILTER>
+    </SUITE>
   </component>
 </project>

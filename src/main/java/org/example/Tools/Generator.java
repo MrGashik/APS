@@ -70,8 +70,40 @@ public class Generator {
         return step.get();
     }
 
+    public void setStep(int new_step) {
+        step.set(new_step);
+    }
+
+    public JButton getButton() {
+        return jButton;
+    }
+
+    public XYSeries getSeries() {
+        return series;
+    }
+
+    public XYSeries getSeries_f() {
+        return series_f;
+    }
+
+    public XYSeries getSeries_b() {
+        return series_b;
+    }
+
+    public int[] getCount_prev_step() {
+        return count_prev_step;
+    }
+
     public int getCount_Source() {
         return count_source;
+    }
+
+    public void nextProb(Double num) {
+        this.probability *= num;
+    }
+
+    public Double getLambda() {
+        return lambda;
     }
 
     public Boolean getStop() {

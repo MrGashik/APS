@@ -1,5 +1,7 @@
 package org.example.Tools;
 
+import org.example.Server;
+
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -49,6 +51,8 @@ public class Buffer {
                     this.package_application.add(app);
                     this.list_application.remove(app);
                     tableModel.removeRow(i);
+                    Long end_time = System.currentTimeMillis();
+                    Server.addTime_app_o(app.getIdSource(), end_time - app.getCreate_time());
                 }
             }
             return this.package_application;

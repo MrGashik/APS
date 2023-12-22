@@ -1,6 +1,9 @@
 package org.example.Tools;
 
+import org.example.Server;
+
 import javax.swing.table.DefaultTableModel;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Device {
@@ -12,10 +15,16 @@ public class Device {
     private static DefaultTableModel tableModel;
     private final AtomicInteger count_application = new AtomicInteger();
     private final boolean mode;
+    private Long work_time = 0L;
+    private Boolean end = false;
 
     public void run(Application application) {
+        Long start_time = System.currentTimeMillis();
         workApp(application);
+        Long end_time = System.currentTimeMillis();
         slt_mng.markEndWork(this.id_device, Thread.currentThread());
+        Server.addTime_app(application.getIdSource(), end_time - application.getCreate_time());
+        work_time += end_time - start_time;
         tableModel.setValueAt("null", this.id_device, tableModel.findColumn("Заявки"));
     }
 
@@ -68,5 +77,21 @@ public class Device {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public Long getWork_time() {
+        return work_time;
+    }
+
+    public boolean getEnd() {
+        return end;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
+    }
+
+    public Object getMutex() {
+        return mutex;
     }
 }

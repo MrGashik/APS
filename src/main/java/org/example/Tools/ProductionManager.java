@@ -1,5 +1,7 @@
 package org.example.Tools;
 
+import org.example.Server;
+
 import javax.swing.table.DefaultTableModel;
 
 public class ProductionManager {
@@ -25,5 +27,7 @@ public class ProductionManager {
 
     private void failure(Application app, DefaultTableModel tM) {
         tM.setValueAt("Отказ", app.getIdSource(), tM.findColumn("Кол-во сгенерированных заявок"));
+        Long end_time = System.currentTimeMillis();
+        Server.addTime_app(app.getIdSource(), end_time - app.getCreate_time());
     }
 }

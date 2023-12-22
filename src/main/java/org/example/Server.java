@@ -16,8 +16,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
     private static final HashMap<Integer, Source> list_source = new HashMap<>();
@@ -31,8 +33,13 @@ public class Server {
     private static Buffer buff;
     private static SelectionManager slt_mng;
     private static boolean mode = false;
+    private static final AtomicBoolean end = new AtomicBoolean(false);
+    private static final HashMap<Integer, Long> time_applications_Tp = new HashMap<>();
+    private static final HashMap<Integer, Long> time_applications_To = new HashMap<>();
 
     public static void main(String[] args) {
+        DecimalFormat df = new DecimalFormat("#.###");
+        Long start_time = System.currentTimeMillis();
         //Таблица источников
         JFrame frame_source = new JFrame("Источники");
         frame_source.setBounds(0, 0, screen.x / 2, screen.y / 2);
@@ -42,6 +49,10 @@ public class Server {
         tableModel_source.addColumn("Кол-во сгенерированных заявок");
         tableModel_source.addColumn("Кол-во отклоненных заявок");
         tableModel_source.addColumn("Эффективность");
+        tableModel_source.addColumn("Время пребывание заявки в системе");
+        tableModel_source.addColumn("Дисперсия времени пребывания заявок в системе");
+        tableModel_source.addColumn("Время ожидания заявки в системе");
+        tableModel_source.addColumn("Дисперсия времени ожидания заявок в системе");
         JScrollPane pane_source = new JScrollPane(table_source);
         frame_source.add(pane_source);
 
@@ -60,6 +71,9 @@ public class Server {
         tableModel_device.addColumn("Приборы");
         tableModel_device.addColumn("Заявки");
         tableModel_device.addColumn("Кол-во обработанных заявок");
+        tableModel_device.addColumn("Время работы прибора");
+        tableModel_device.addColumn("Время бездействия");
+        tableModel_device.addColumn("Эффективность");
         JScrollPane pane_device = new JScrollPane(table_device);
         frame_device.add(pane_device);
 
@@ -87,7 +101,7 @@ public class Server {
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
         NumberAxis numberAxis = new NumberAxis();
-        numberAxis.setTickUnit(new NumberTickUnit(5));
+        numberAxis.setTickUnit(new NumberTickUnit(50));
         plot.setDomainAxis(numberAxis);
         plot.setDomainCrosshairVisible(true);
         plot.setRangeCrosshairVisible(true);
@@ -176,10 +190,7 @@ public class Server {
             sum_app = sum_app + source.getCount_application();
             sum_fail = sum_fail + source.getCount_failure();
         }
-        String str = "Всего отправлено: " + sum_app + "\n" +
-                "Отказов: " + sum_fail + "\n" +
-                "Процент эффективности системы: " + Math.round((1 - sum_fail / sum_app) * 100) + "%";
-        JOptionPane.showMessageDialog(new JFrame(), str);
+        end.set(true);
 
         //Эффективность каждого источника
         for (int key : list_source.keySet()) {
@@ -194,11 +205,114 @@ public class Server {
                     key, tableModel_source.findColumn("Эффективность")
             );
         }
+
+            for (int key : list_device.keySet()) {
+                Device device = list_device.get(key);
+                while (!device.getEnd()) {
+                    try {
+                        if (buff.statusBuff() == 0) {
+                            synchronized (device.getMutex()) {
+                                device.setEnd(true);
+                            }
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+        Long end_time = System.currentTimeMillis();
+        long sum_time = 0L;
+        for (int key: list_device.keySet()) {
+            Device device = list_device.get(key);
+            Long cur_time = device.getWork_time();
+            tableModel_device.setValueAt(((float) cur_time / 1000) + " сек", key, tableModel_device.findColumn("Время работы прибора"));
+            tableModel_device.setValueAt(((end_time - start_time - (float) cur_time) / 1000) + " сек", key, tableModel_device.findColumn("Время бездействия"));
+            String time = Math.round(((float) cur_time) * 100 / ((float) (end_time - start_time))) + "%";
+            tableModel_device.setValueAt(time, key, tableModel_device.findColumn("Эффективность"));
+            sum_time += end_time - start_time - cur_time;
+        }
+
+        long time_all_Tp = 0L;
+        for (int key: time_applications_Tp.keySet()) {
+            float cur_Tp;
+            if (list_source.get(key).getCount_application() == 0) {
+                cur_Tp = 0;
+            } else {
+                cur_Tp = (float) time_applications_Tp.get(key) / (float) list_source.get(key).getCount_application();
+            }
+            tableModel_source.setValueAt(
+                    df.format(cur_Tp / 1000) + " сек",
+                    key,
+                    tableModel_source.findColumn("Время пребывание заявки в системе")
+            );
+            time_all_Tp += time_applications_Tp.get(key);
+        }
+
+        float Tp = (float) time_all_Tp / (float) sum_app / 1000;
+        float To = (float) sum_time / (float) sum_app / 1000;
+
+        long time_all_To = 0L;
+        for (int key: time_applications_Tp.keySet()) {
+            float cur_To;
+            if (list_source.get(key).getCount_application() == 0) {
+                cur_To = 0;
+            } else {
+                cur_To = (float) time_applications_To.get(key) / (float) list_source.get(key).getCount_application();
+            }
+            tableModel_source.setValueAt(
+                    df.format(cur_To / 1000) + " сек",
+                    key,
+                    tableModel_source.findColumn("Время ожидания заявки в системе")
+            );
+            time_all_To += time_applications_To.get(key);
+        }
+
+        for (int key: time_applications_Tp.keySet()) {
+            long cur_Tp;
+            if (list_source.get(key).getCount_application() == 0) {
+                cur_Tp = 0;
+            } else {
+                cur_Tp = time_applications_Tp.get(key) / list_source.get(key).getCount_application();
+            }
+            tableModel_source.setValueAt(
+                    df.format(Math.pow(cur_Tp - Tp, 2) / sum_app / 1000) + " сек",
+                    key,
+                    tableModel_source.findColumn("Дисперсия времени пребывания заявок в системе")
+            );
+        }
+
+        for (int key: time_applications_To.keySet()) {
+            long cur_To;
+            if (list_source.get(key).getCount_application() == 0) {
+                cur_To = 0;
+            } else {
+                cur_To = time_applications_To.get(key) / list_source.get(key).getCount_application();
+            }
+            tableModel_source.setValueAt(
+                    df.format(Math.pow(cur_To - To, 2) / sum_app / 1000) + " сек",
+                    key,
+                    tableModel_source.findColumn("Дисперсия времени ожидания заявок в системе")
+            );
+        }
+
+        String str = "Время системы" + df.format((float) (end_time - start_time) / 100) + " сек\n" +
+                "Всего отправлено: " + Math.round(sum_app) + " шт\n" +
+                "Отказов: " + Math.round(sum_fail) + " шт\n" +
+                "Выполнено: " + Math.round(sum_app - sum_fail) + " шт\n" +
+                "Процент эффективности системы: " + Math.round((1 - sum_fail / sum_app) * 100) + "%\n" +
+                "Среднее время пребывание заявки в системе: " + df.format(Tp) + " сек\n" +
+                "Среднее время ожидание заявки прибором: " + df.format(To) + " сек\n" +
+                "Среднее время обслуживания заявки системой: " + df.format(Tp - To) + " сек\n";
+        JOptionPane.showMessageDialog(new JFrame(), str);
     }
 
     private static void createSource() {
         Source source = new Source(list_source.size(), pdt_mng, gen, tableModel_source, mode);
         list_source.put(source.getId(), source);
+        time_applications_Tp.put(source.getId(), 0L);
+        time_applications_To.put(source.getId(), 0L);
         String[] data = {
                 String.valueOf(source.getId()),
                 "null",
@@ -217,7 +331,8 @@ public class Server {
         String[] data = {
                 String.valueOf(device.getId()),
                 "null",
-                String.valueOf(device.getCount_application())
+                String.valueOf(device.getCount_application()),
+                ""
         };
         tableModel_device.addRow(data);
     }
@@ -251,5 +366,17 @@ public class Server {
         sum[1] = list_f.stream().reduce(sum[1], Integer::sum);
         sum[2] = buff.countApp();
         return sum;
+    }
+
+    public static boolean getEnd() {
+        return end.get();
+    }
+
+    public static void addTime_app(Integer id, Long time) {
+        time_applications_Tp.replace(id, time_applications_Tp.get(id) + time);
+    }
+
+    public static void addTime_app_o(Integer id, Long time) {
+        time_applications_To.replace(id, time_applications_To.get(id) + time);
     }
 }

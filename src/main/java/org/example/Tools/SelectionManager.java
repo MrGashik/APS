@@ -1,6 +1,7 @@
 package org.example.Tools;
 
 import org.example.Server;
+import org.jfree.data.xy.XYSeries;
 
 import java.awt.desktop.AppForegroundListener;
 import java.util.ArrayList;
@@ -88,14 +89,37 @@ public class SelectionManager {
         synchronized (mutex) {
             try {
                 Thread.sleep(10);
-                ArrayList< Application > pack = new ArrayList<>(packages_device.get(id_device));
+                ArrayList<Application> pack = new ArrayList<>(packages_device.get(id_device));
                 if (pack.size() == 0) {
                     list_status_device.get(id_device).set(false);
                     thread.interrupt();
+                    int step = gen.getStep();
+                    if (Server.getEnd()) {
+                        if (buffer.statusBuff() == 0) {
+                            list_device.get(id_device).setEnd(true);
+                        }
+                        int[] count_cur_step = Server.countAppStep();
+                        gen.getSeries().add(step, count_cur_step[0] - gen.getCount_prev_step()[0]);
+                        gen.getCount_prev_step()[0] = count_cur_step[0];
+                        gen.getSeries_f().add(step, count_cur_step[1] - gen.getCount_prev_step()[1]);
+                        gen.getCount_prev_step()[1] = count_cur_step[1];
+                        gen.getSeries_b().add(step, count_cur_step[2]);
+                        if (mode) {
+                            gen.getButton().setEnabled(true);
+                            gen.invertStop();
+                            while (gen.getStop()) {
+                                Thread.sleep(10);
+                            }
+                        }
+                        step++;
+                        gen.setStep(step);
+                        gen.nextProb(gen.getLambda() / gen.getStep());
+                    }
                 } else {
                     thread = new Thread(() -> list_device.get(id_device).run(pack.get(0)));
                     packages_device.get(id_device).remove(packages_device.get(id_device).get(0));
                     thread.start();
+
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
