@@ -126,4 +126,8 @@ public class SelectionManager {
             }
         }
     }
+
+    public int getSizePack(int id) {
+        return packages_device.get(id).size();
+    }
 }

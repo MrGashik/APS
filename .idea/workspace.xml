@@ -7,13 +7,7 @@
     <list default="true" id="84b82287-3d82-407c-8375-764702ce5b40" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Buffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Buffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Device.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Device.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/ProductionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/ProductionManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/SelectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/SelectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Tools/Source.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Tools/Source.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Settings.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Settings.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

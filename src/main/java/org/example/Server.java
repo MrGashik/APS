@@ -210,7 +210,7 @@ public class Server {
                 Device device = list_device.get(key);
                 while (!device.getEnd()) {
                     try {
-                        if (buff.statusBuff() == 0) {
+                        if (buff.statusBuff() == 0 && slt_mng.getSizePack(device.getId()) == 0) {
                             synchronized (device.getMutex()) {
                                 device.setEnd(true);
                             }
